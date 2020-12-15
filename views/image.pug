@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  div
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+      a.navbar-brand() Video Manager
+      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item.active
+            a.nav-link(href='/web/image')
+              | Image 
+              span.sr-only (current)
+          li.nav-item.active
+            a.nav-link(href='video') Video
+    div(style = "display: flex; flex-direction: column; width: 100%;")      
+      form(method='post', enctype='multipart/form-data', style='margin: 20px; flex-direction: column;' action='api/upload/picture')
+        input.btn.btn-dark(type='file', name='imageupload', required)
+        input.btn.btn-success(type='submit', name='uploadimage', value='Upload Image', style = "height: 44px; margin-left: 10px")
+      div(style = "display: grid; grid-template-columns: auto auto auto auto auto")
+        each image in data
+          div(style="")
+            form(method='post', enctype='multipart/form-data', style='margin: 20px;' action=`api/delete/picture/${image.filepath}`)
+              div(style='height: 250px; width: 250px;') 
+                a(href=`/${image.filepath}`)
+                  img(src=`/${image.filepath}` , alt='some image', style='height: 250px; width: 250px;')
+              div(style='width: 250px; background-color: green;')
+                button.btn.btn-danger(type='submit', style='width: 250px;') Xóa      
+
+

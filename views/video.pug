@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  div
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+      a.navbar-brand() Video Manager
+      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item.active
+            a.nav-link(href='/web/image')
+              | Image 
+              span.sr-only (current)
+          li.nav-item.active
+            a.nav-link(href='video') Video
+    div      
+      form(method='post', enctype='multipart/form-data', style='margin: 20px; flex-direction: column;' action='api/upload/video')
+        input.btn.btn-dark(type='file', name='videoupload', required)
+        input.btn.btn-success(type='submit', name='uploadvideo', value='Upload Video', style = "height: 44px; margin-left: 10px")
+    div(style = "display: grid; grid-template-columns: auto auto auto auto auto")
+      each video in data
+        div()
+          form(method='post', enctype='multipart/form-data', style='margin: 20px; justify-content: center;align-items: center;' action=`api/delete/video/${video.filepath}`)
+            div(style='height: 250px; width: 250px;') 
+              a(href=`/${video.filepath}`)
+                video(controls='' style='height: 250px; width: 250px;')
+                source(src=`/${video.filepath}` type='video/mp4')
+            div(style='width: 250px; background-color: green;')
+              button.btn.btn-danger(type='submit', style='width: 250px;') Xóa     
+
+
+
+
