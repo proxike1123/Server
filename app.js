@@ -6,6 +6,7 @@ var multer = require('multer');
 const mkdirp = require('mkdirp');
 const fs = require('fs')
 var mysql = require('mysql');
+const open = require('open');
 
 const app = express();
 
@@ -318,5 +319,7 @@ app.post('/web/api/upload/video', WebUploadVideo.single('videoupload'),function(
   });
   res.redirect('/web/video')
 });
+
+open('http://localhost:6969/web/image');
 
 app.listen(6969);
