@@ -6,7 +6,7 @@ var multer = require('multer');
 const mkdirp = require('mkdirp');
 const fs = require('fs')
 var mysql = require('mysql');
-const open = require('open');
+// const open = require('open');
 
 const app = express();
 
@@ -14,7 +14,7 @@ var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "root",
-  database: "manager",
+  database: "manager1",
 });
 
 
@@ -214,112 +214,5 @@ app.get('/api/videos', (req, res) => {
     }
   });
   })
-
-
-//show image and video in web
-app.get('/web/image', (req, res) => {
-  con.query("SELECT * FROM images", function (err, result, fields) {
-    if (err) throw err;
-    var data = []
-    result.forEach(row => {
-      data.push({'filepath': row.image})
-    })
-    res.render('image', {data: data}) 
-  });
-  //fs.readdir('pictures', (err, files) => {
-    // var data = []
-    // files.forEach(filepath => {
-    //   data.push({'filepath': filepath})
-    // })
-  //})
-})
-
-app.get('/web/video', (req, res) => {
-
-  con.query("SELECT * FROM videos", function (err, result, fields) {
-    if (err) throw err;
-    var data = []
-    result.forEach(row => {
-      data.push({'filepath': row.video})
-    })
-    res.render('video', {data: data}) 
-  });
-
-  // fs.readdir('videos', (err, files) => {
-  //   var data = []
-  //   files.forEach(filepath => {
-  //     data.push({'filepath': filepath})
-  //   })
-  //   res.render('video', {data: data}) 
-  // })
-})
-
-// app.post('/web/image', (req, res) => {
-//   console.log(req.body);
-//   res.render('form', { title: 'Registration form' });
-// })
-
-
-var WebUploadImage = multer({
-  dest: 'pictures/',
-  storage: storageImage,
-})
-
-var WebUploadVideo = multer({
-  dest: 'videos/',
-  storage: storageVideo,
-})
-
-app.post('/web/api/upload/picture', WebUploadImage.single('imageupload'),function(req, res) {
-  var sql = `INSERT INTO images (image) VALUES ('${req.file.filename}')`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
-  res.redirect('/web/image')
-});
-
-app.post('/web/api/delete/picture/:id',function(req, res) {
-
-  var sql = `DELETE FROM images WHERE image = '${req.params.id}'`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("Number of records deleted: " + result.affectedRows);
-  });
-
-  fs.unlink('pictures/' + req.params.id, (err) => {
-    if (err) {
-      return res.redirect('/web/image')
-    }
-    return   res.redirect('/web/image')
-  })
-});
-
-app.post('/web/api/delete/video/:id',function(req, res) {
-
-  var sql = `DELETE FROM videos WHERE video = '${req.params.id}'`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("Number of records deleted: " + result.affectedRows);
-  });
-
-  fs.unlink('videos/' + req.params.id, (err) => {
-    if (err) {
-      return res.redirect('/web/video')
-    }
-    return   res.redirect('/web/video')
-  })
-});
-
-app.post('/web/api/upload/video', WebUploadVideo.single('videoupload'),function(req, res) {
-  var sql = `INSERT INTO videos (video) VALUES ('${req.file.filename}')`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
-  res.redirect('/web/video')
-});
-
-open('http://localhost:6969/web/image');
 
 app.listen(6969);
